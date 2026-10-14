@@ -101,7 +101,7 @@ const TEMPLATES = {
 };
 const TEMPLATE_ORDER = ['resume', 'portfolioCover', 'portfolioDetail', 'coverLetter'];
 
-const COVER_PROFILE = { inset: 38, photoW: 374, photoH: 499, gap: 32, skillsTop: 10 };
+const COVER_PROFILE = { inset: 32, photoW: 374, photoH: 499, gap: 32, skillsTop: 10 };
 const PAGE_TOP = { resume: 37, coverLetter: 55, portfolioDetail: 66, portfolioCover: 74 };
 const PAGE_BOTTOM = 30;
 const FILLED_STEP = PAGE_W + FILLED_GAP;
@@ -155,13 +155,13 @@ const COMP_VERSIONS = {
   'Block/PageTitle': 3,
   'Block/Letter/Header': 2,
   'Block/Cover/Header': 2,
-  'Block/Cover/SkillGroup': 2,
+  'Block/Cover/SkillGroup': 3,
   'Block/Cover/ProjectItem': 3,
   'Block/Detail/Side': 4,
   'Block/Detail/Summary': 2,
   'Block/Detail/ProjectHead': 1,
   'Template/Resume': 8,
-  'Template/PortfolioCover': 5,
+  'Template/PortfolioCover': 6,
   'Template/PortfolioDetail': 4,
   'Template/CoverLetter': 3,
 };
@@ -1296,13 +1296,13 @@ const BLOCKS = {
   },
   'Block/Cover/SkillGroup': async () => {
     const c = comp('Block/Cover/SkillGroup', 'VERTICAL', { width: 640, gap: 'space/inline',
-      desc: '스킬 그룹. 카테고리·도구 + 카테고리 윗변 14px 아래 얇은 선, 아래 우측 정렬 설명(**굵게** 가능).' });
-    const row = put(c, al('HORIZONTAL', { name: 'row', cross: 'MIN' }), { w: 'FILL' });
-    const col = put(row, al('VERTICAL', { name: 'titles', gap: 0 }));
-    const category = await text({ name: 'category', style: 'KB/Title/ItemSmall', chars: 'AI Agent', parent: col });
-    const tools = await text({ name: 'tools', style: 'KB/Caption', chars: 'Claude code, Codex', parent: col });
+      desc: '스킬 그룹. [카테고리 | 카테고리 오른쪽 20 부터 끝까지 이어지는 얇은 선(윗변 14 아래)] 다음 줄에 도구, 아래 우측 정렬 설명(**굵게** 가능).' });
+    const col = put(c, al('VERTICAL', { name: 'titles', gap: 0 }), { w: 'FILL' });
+    const row = put(col, al('HORIZONTAL', { name: 'row', cross: 'MIN' }), { w: 'FILL' });
+    const category = await text({ name: 'category', style: 'KB/Title/ItemSmall', chars: 'AI Agent', parent: row });
     const ruleWrap = put(row, al('HORIZONTAL', { name: 'ruleWrap', pl: 'space/divider-l', pt: 14 }), { w: 'FILL' });
     addInst(ruleWrap, 'Atom/Rule/Thin', { name: 'rule', w: 'FILL' });
+    const tools = await text({ name: 'tools', style: 'KB/Caption', chars: 'Claude code, Codex', parent: col });
     const desc = await text({ name: 'description', style: 'KB/Body/Dense', chars: '설명을 입력하세요.', align: 'RIGHT', parent: c, size: 'FILL', width: 640 });
     textProp(c, category, 'category');
     textProp(c, tools, 'tools');

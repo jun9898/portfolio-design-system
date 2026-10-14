@@ -109,7 +109,7 @@
 ## 페이지 템플릿 (Templates 페이지) — 전부 컴포넌트로 만들고 옆에 KB 내용이 채워진 인스턴스 1장씩
 - 공통: 프레임 `size/page-w`×`size/page-h` FIXED, fill `color/paper`, 세로 auto-layout, padding 좌우 `space/page-x` 상 `space/page-top` 하 `space/page-bottom`, gap `space/section`, `clipsContent=false` (넘치면 아래로 삐져나와 눈에 보이게). primaryAxisSizingMode FIXED.
 - `Template/Resume`: [Block/Resume/Header][Section: Block/SectionHeader("About Me", right=Contact) + 세로(gap `space/para`) AboutPara ×2][Section: SectionHeader("Experience", right=Note "자세한 내용은 Portfolio에 자세하게 작성되어 있습니다.") + 세로(gap `space/item`) ExperienceItem ×5][Section: SectionHeader("Education") + EducationItem]. 섹션 내부 헤더→목록 gap `space/section-head`.
-- `Template/PortfolioCover`: [Cover/Header][Section: PageTitle("Profile") + row(왼쪽 들여 38, gap 32): 사진 자리 Rectangle 374×499(x=93) fill #d9d9d9 | 세로(gap 9, 위 10) SkillGroup ×4(x=499)][Section: PageTitle("Project", right=Note) + 세로(gap `space/item-list`) ProjectItem ×6].
+- `Template/PortfolioCover`: [Cover/Header][Section: PageTitle("Profile") + row(왼쪽 들여 32, gap 32): 사진 자리 Rectangle 374×499(x=87) fill #d9d9d9 | 세로(gap 9, 위 10) SkillGroup ×4(x=493)][Section: PageTitle("Project", right=Note) + 세로(gap `space/item-list`) ProjectItem ×6].
 - `Template/PortfolioDetail`: [PageTitle(회사명, right=Note)][세로 좌 padding `space/inner` gap `space/project`: Detail/Summary, Detail/Project ×2].
 - `Template/CoverLetter`: [Letter/Header][PageTitle("About Me")][세로 좌 padding `space/inner` 우 padding 50 gap `space/para-letter`: Letter/Paragraph ×4].
 - 완성 예시: 각 템플릿 인스턴스에 기준 프레임(505:61 / 505:626 / 505:383 / 505:799)의 실제 텍스트를 use_figma 로 읽어 채운다. 본문의 굵게 구간은 `getStyledTextSegments(['fontName'])` 로 읽어 새 노드에 `setRangeFontName` 으로 Bold 재적용(Noto Sans KR Bold).
