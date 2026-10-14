@@ -2784,6 +2784,77 @@ function applyTheme(theme) {
 }
 
 // Unbind color/accent·color/ink from fills/strokes under the selection, keeping the current color.
+async function repairSelectionText() {
+  const sel = figma.currentPage.selection;
+  if (!sel.length) throw new Error('선택된 노드가 없습니다. 점검할 페이지(프레임)를 선택하세요.');
+  await loadStyles();
+  const texts = [];
+  for (const root of sel) {
+    if (root.type === 'TEXT') texts.push(root);
+    walk(root, (n) => { if (n.type === 'TEXT') texts.push(n); }, true);
+  }
+  const styleCache = new Map();
+  const styleOf = async (id) => {
+    if (!id || typeof id !== 'string') return null;
+    if (!styleCache.has(id)) {
+      let st = null;
+      try { st = await figma.getStyleByIdAsync(id); } catch (e) { st = null; }
+      styleCache.set(id, st);
+    }
+    return styleCache.get(id);
+  };
+  const lhOf = (lh) => (lh && lh.unit === 'PIXELS' ? lh.value : null);
+  const label = (n) => `"${n.characters.slice(0, 16).replace(/\n/g, ' ')}"`;
+  let fixed = 0;
+  let relinked = 0;
+  let noStyle = 0;
+  let failed = 0;
+  let shown = 0;
+  for (const n of texts) {
+    try {
+      const segs = n.getStyledTextSegments(['fontSize', 'textStyleId', 'fontName', 'lineHeight']);
+      const notes = [];
+      let touched = false;
+      for (const seg of segs) {
+        const cur = await styleOf(seg.textStyleId);
+        if (!cur) {
+          noStyle++;
+          notes.push(`스타일 없음 ${seg.fontSize}px`);
+          continue;
+        }
+        const local = S.styles.get(cur.name);
+        if (!local) {
+          notes.push(`"${cur.name}" ${seg.fontSize}px (이 파일에 같은 이름 스타일 없음)`);
+          continue;
+        }
+        const sizeOff = Math.abs(seg.fontSize - local.fontSize) > 0.01;
+        const lhOff = lhOf(seg.lineHeight) !== lhOf(local.lineHeight);
+        const foreign = cur.id !== local.id;
+        if (!sizeOff && !lhOff && !foreign) continue;
+        notes.push(`"${cur.name}" ${seg.fontSize}px → ${local.fontSize}px${foreign ? ' (다른 파일 스타일 → 이 파일 스타일로 재연결)' : ''}`);
+        await loadFont(seg.fontName);
+        await loadFont(local.fontName);
+        await n.setRangeTextStyleIdAsync(seg.start, seg.end, local.id);
+        const sameFont = seg.fontName.family === local.fontName.family && seg.fontName.style === local.fontName.style;
+        if (!sameFont) n.setRangeFontName(seg.start, seg.end, seg.fontName);
+        if (foreign) relinked++;
+        touched = true;
+      }
+      if (touched) fixed++;
+      if (notes.length && shown < 40) {
+        shown++;
+        info(`${n.name} ${label(n)}: ${notes.join(', ')}`);
+      }
+    } catch (e) {
+      failed++;
+      if (shown < 40) { shown++; warn(`${n.name}: 고치지 못함 (${errText(e)})`); }
+    }
+  }
+  ok(`텍스트 ${texts.length}개 점검: 크기·행간 복구 ${fixed}개 (다른 파일 스타일 재연결 ${relinked}구간), 스타일 없는 구간 ${noStyle}개`);
+  if (noStyle) warn('스타일이 아예 없는 글자는 원래 크기를 알 수 없어 그대로 뒀습니다. 위 로그의 크기를 확인해 주세요.');
+  if (failed) warn(`${failed}개 텍스트는 고치지 못했습니다(잠긴 노드, 폰트 없음 등).`);
+}
+
 async function freezeSelectionColors() {
   const sel = figma.currentPage.selection;
   if (!sel.length) throw new Error('선택된 노드가 없습니다. 색을 고정할 페이지(프레임)를 선택하세요.');
@@ -2955,6 +3026,9 @@ figma.ui.onmessage = async (msg) => {
       case 'fillTemplate':
         await runStep(`5 fillTemplate(${msg.which}${msg.which === 'portfolioDetail' ? '[' + msg.index + ']' : ''})`, family,
           () => fillTemplate(msg.json, msg.which, msg.index, msg.images, msg.accent, msg.preset));
+        break;
+      case 'repairSelectionText':
+        await runStep('글자 크기 점검·복구(선택)', family, repairSelectionText);
         break;
       case 'freezeSelectionColors':
         await runStep('색 고정(선택)', family, freezeSelectionColors);
