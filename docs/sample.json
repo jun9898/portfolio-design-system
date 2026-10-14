@@ -1,0 +1,141 @@
+{
+  "theme": { "accent": "#f9af00", "ink": "#101010" },
+  "profile": {
+    "name": "홍길동",
+    "email": "hello@example.com",
+    "phone": "010-0000-0000",
+    "github": { "label": "your-github", "url": "https://github.com/your-github" },
+    "blog": { "label": "your-blog", "url": "https://example.com" }
+  },
+  "resume": {
+    "tagline": "“문제를 구조로 푸는 Product Engineer 홍길동입니다”",
+    "sections": ["education", "about", "experience", "project", "skill"],
+    "note": "밑줄 쳐진 곳은 linking이 되어 있습니다.",
+    "experienceNote": "자세한 내용은 Portfolio에 작성되어 있습니다.",
+    "projectsNote": "프로젝트에 관한 자세한 설명은 포트폴리오에 작성돼 있습니다.",
+    "about": [
+      {
+        "heading": "문제를 먼저 정의합니다",
+        "body": "코드를 쓰기 전에 **코드가 필요한 문제인지**부터 확인합니다.\n• 데이터로 문제의 실재 여부를 검증합니다\n• 2주 이상 걸리는 작업은 **유저 인터뷰를 선행**합니다"
+      },
+      {
+        "heading": "조직의 생산성을 만듭니다",
+        "body": "반복 업무를 자동화하고, 팀이 함께 쓰는 **공용 도구**를 만들어 왔습니다."
+      }
+    ],
+    "experience": [
+      {
+        "title": "Example Corp",
+        "url": "https://example.com",
+        "period": "2025.01.~ 진행중",
+        "body": "[예시 서비스](https://example.com) Product Engineer로 근무하며 **신규 기능 5건**을 배포했습니다.\n큐 기반 파이프라인을 설계해 **처리 시간을 40% 단축**했습니다."
+      },
+      {
+        "title": "Sample Studio",
+        "period": "2023.03.~ 2024.12.",
+        "body": "데이터 파이프라인을 구축해 **팀의 수작업을 80% 이상** 줄였습니다."
+      }
+    ],
+    "education": [
+      { "school": "예시대학교", "dept": "컴퓨터공학과", "meta": "4.0 / 4.5   2019. 03.~ 2023. 02." }
+    ],
+    "projects": [
+      {
+        "title": "Sample Project",
+        "url": "https://example.com",
+        "tools": ["NestJS", "BullMQ", "MongoDB", "AWS"],
+        "period": "2025.03.01. ~ 2025.06.30.",
+        "body": "• 예시 서비스 - 팀 프로젝트, 백엔드, Leader\n  • **BullMQ 체인**으로 잡 파이프라인을 설계\n    재시도와 타임아웃을 큐 단위로 분리\n  • ECS 오토스케일로 **처리량 3배** 확보",
+        "links": [
+          { "label": "Repository", "url": "https://github.com/your-github/sample", "icon": "github" },
+          { "label": "발표자료", "url": "https://example.com/slides", "icon": "youtube" }
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "category": "BE",
+        "tools": ["NestJS", "Spring", "MongoDB", "MySQL"],
+        "description": "**다양한 Backend Framework**를 다룰 수 있으며,\nORM 기술을 능숙하게 활용합니다."
+      },
+      {
+        "category": "DevOps & Infra",
+        "tools": ["Docker", "GitHub Actions", "AWS"],
+        "description": "GitHub Actions로 **CI/CD 파이프라인을 구축**할 수 있습니다."
+      }
+    ]
+  },
+  "coverLetter": {
+    "tagline": "\"끝까지 포기하지 않는 개발자입니다.\"",
+    "paragraphs": [
+      { "heading": "성장을 향한 도전", "body": "자기소개서 첫 단락입니다. **굵게**와 [링크](https://example.com)를 쓸 수 있습니다." },
+      { "heading": "문제 해결 경험", "body": "두 번째 단락입니다.\n줄바꿈은 \\n 으로 넣습니다." }
+    ]
+  },
+  "portfolio": {
+    "cover": {
+      "tagline": "“다양한 문제에 정면으로 부딪히며,\n해결책을 찾아내는 개발자입니다.”",
+      "skills": [
+        { "category": "AI Agent", "tools": ["Claude Code", "LangGraph"], "description": "**LLM 파이프라인**을 설계하고\n사내에 AI 활용 사례를 공유합니다." },
+        { "category": "BE", "tools": ["NestJS", "Spring", "MongoDB"], "description": "모든 프로젝트에서 **아키텍처 설계를 주도**합니다." }
+      ],
+      "projectsNote": "밑줄 쳐진 곳은 linking이 되어 있습니다.",
+      "projects": [
+        {
+          "title": "Example Corp",
+          "url": "https://example.com",
+          "tools": ["NestJS", "Next.js", "AWS"],
+          "period": "2025.01.01. ~ 진행중",
+          "bullets": ["**Product Engineer**로 근무", "예시 서비스 기획 및 개발"],
+          "links": []
+        },
+        {
+          "title": "Sample Project",
+          "tools": ["Spring", "JPA", "Docker"],
+          "period": "2024.06.01. ~ 2024.07.31.",
+          "bullets": ["실시간 웹 서비스", "팀에서 **리더**로 백엔드 개발과 아키텍처 설계를 담당"],
+          "links": [{ "label": "Repository", "url": "https://github.com/your-github/sample", "icon": "github" }]
+        }
+      ]
+    },
+    "details": [
+      {
+        "company": "Example Corp",
+        "companyUrl": "https://example.com",
+        "summary": {
+          "headline": "LLM 파이프라인을 그래프·큐 구조로 재설계하고\n배포 경로를 하나로 통일했습니다",
+          "sub": "Example Corp에서 진행한 **프로젝트 2개**입니다."
+        },
+        "projects": [
+          {
+            "title": "큐 파이프라인 재설계",
+            "subtitle": "단일 호출을 큐 체인으로 분해해 처리 시간을 줄인 프로젝트",
+            "period": "2025.03 ~ 2025.06",
+            "tags": ["NestJS", "BullMQ", "ECS", "MongoDB"],
+            "links": [{ "label": "Repository", "url": "https://github.com/your-github/sample", "icon": "github" }],
+            "blocks": [
+              { "type": "section", "heading": "개요", "body": "• 단일 호출이던 처리를 **큐 체인**으로 분해\n• 실패 지점부터 재시작 가능하도록 설계" },
+              { "type": "section", "heading": "문제 정의", "body": "• 중간 실패 시 **전체를 다시 실행**해야 했음\n  • 평균 처리 시간 100초\n    재시도 비용이 누적됨" },
+              { "type": "image", "src": "https://placehold.co/1200x600/png", "caption": "전후 구조 비교 다이어그램" },
+              { "type": "section", "heading": "임팩트", "body": "## 결과\n• 처리 시간 **100초 → 60초**\n• 실패 재처리 비용 감소" }
+            ]
+          },
+          {
+            "title": "설정 관리 모듈",
+            "subtitle": "환경별 설정을 하나의 인터페이스로 통일",
+            "period": "2024.10",
+            "tags": ["Python", "Airflow"],
+            "blocks": [
+              { "type": "section", "heading": "해결 방안", "body": "• Provider 추상화로 환경별 구현 분리\n• 테스트에서 임의 Provider 주입 가능" },
+              { "type": "code", "text": "class ConfigManager:\n    @staticmethod\n    def get(key):\n        return _provider().get(key)" },
+              { "type": "images", "items": [
+                { "src": "https://placehold.co/800x600/png", "caption": "Before" },
+                { "src": "https://placehold.co/800x600/png", "caption": "After" }
+              ], "gap": 24 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

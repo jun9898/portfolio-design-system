@@ -1,0 +1,715 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "KB 이력서 패키지 콘텐츠",
+  "description": "Figma 'KB Tokens' 디자인 시스템의 Template/* 컴포넌트를 채우는 데 필요한 값. 본문 문자열 안에서 **굵게** 는 Bold 구간, [텍스트](url) 은 하이퍼링크 구간으로 변환된다. 줄바꿈은 \\n.",
+  "type": "object",
+  "required": [
+    "profile",
+    "resume"
+  ],
+  "properties": {
+    "profile": {
+      "type": "object",
+      "description": "모든 페이지 헤더에 공통으로 쓰이는 값",
+      "required": [
+        "name",
+        "email",
+        "phone",
+        "github",
+        "blog"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "examples": [
+            "홍길동"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "examples": [
+            "hello@example.com"
+          ]
+        },
+        "phone": {
+          "type": "string",
+          "examples": [
+            "010-0000-0000"
+          ]
+        },
+        "github": {
+          "type": "object",
+          "required": [
+            "label",
+            "url"
+          ],
+          "properties": {
+            "label": {
+              "type": "string",
+              "examples": [
+                "your-github"
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "blog": {
+          "type": "object",
+          "required": [
+            "label",
+            "url"
+          ],
+          "properties": {
+            "label": {
+              "type": "string",
+              "examples": [
+                "your-blog"
+              ]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        }
+      }
+    },
+    "theme": {
+      "type": "object",
+      "description": "선택. Build all / Fill 시작 시 KB Tokens 의 색 변수 값을 바꾼다. 변수에 연결된 모든 페이지(이미 만든 페이지 포함) 색이 함께 바뀐다. accent 가 없으면 플러그인 창의 '강조색' 값을 쓴다.",
+      "properties": {
+        "accent": {
+          "type": "string",
+          "pattern": "^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "color/accent (노란 점, 별표, 태그라인, 소제목)",
+          "examples": [
+            "#f9af00"
+          ]
+        },
+        "ink": {
+          "type": "string",
+          "pattern": "^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+          "description": "color/ink (본문·제목·구분선)",
+          "examples": [
+            "#101010"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "resume": {
+      "type": "object",
+      "description": "Template/Resume 한 장. 페이지가 넘치면 experience 를 나눠 resume 배열 항목을 하나 더 만든다.",
+      "required": [
+        "tagline"
+      ],
+      "properties": {
+        "sections": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "education",
+              "about",
+              "experience",
+              "project",
+              "skill"
+            ]
+          },
+          "description": "섹션을 쌓는 순서. 생략하면 [\"education\",\"about\",\"experience\",\"project\",\"skill\"](SPEC2 기본, 미리보기와 같음). 데이터가 빈 섹션은 건너뛴다. A형: [\"about\",\"experience\",\"education\"]",
+          "examples": [
+            [
+              "education",
+              "about",
+              "experience",
+              "project",
+              "skill"
+            ]
+          ]
+        },
+        "tagline": {
+          "type": "string",
+          "description": "이름 아래 노란 한 줄 소개",
+          "examples": [
+            "“문제를 구조로 푸는 Product Engineer 홍길동입니다”"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "description": "About Me 제목 오른쪽 별표 안내문. 생략하거나 비우면 기본 문구.",
+          "default": "밑줄 쳐진 곳은 linking이 되어 있습니다."
+        },
+        "educationNote": {
+          "type": "string",
+          "description": "Education 제목 오른쪽 안내문. 생략하면 숨김."
+        },
+        "logo": {
+          "type": "string",
+          "description": "선택. 회사 로고. 높이 60(logoHeight 로 변경), 폭은 비율대로 최대 270, x = 이름 오른쪽 끝 + 20, y = 55, FIT. http(s) URL, data URI, 또는 이미지 폴더 안 파일 이름. 비우면 숨김.",
+          "examples": [
+            "sparta-logo.png"
+          ]
+        },
+        "logoHeight": {
+          "type": "number",
+          "default": 60,
+          "description": "로고 높이 덮어쓰기"
+        },
+        "about": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": [
+              "heading",
+              "body"
+            ],
+            "properties": {
+              "heading": {
+                "type": "string",
+                "examples": [
+                  "문제 해결을 위한 방법은 ‘코드 바깥’에 있습니다"
+                ]
+              },
+              "body": {
+                "type": "string",
+                "description": "16/28 본문. `• ` 줄은 1em 매달림 들여쓰기(그 항목만 detach 해 줄 단위로 배치)."
+              }
+            }
+          }
+        },
+        "experienceNote": {
+          "type": "string",
+          "description": "Experience 제목 오른쪽 안내문. 생략하면 숨김.",
+          "examples": [
+            "자세한 내용은 Portfolio에 자세하게 작성되어 있습니다."
+          ]
+        },
+        "experience": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "title",
+              "period",
+              "body"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "examples": [
+                  "Example Corp"
+                ]
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "있으면 제목에 밑줄 링크"
+              },
+              "period": {
+                "type": "string",
+                "examples": [
+                  "2025.12.~ 진행중"
+                ]
+              },
+              "body": {
+                "type": "string",
+                "description": "**굵게** 허용"
+              }
+            }
+          }
+        },
+        "education": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "school",
+              "dept",
+              "meta"
+            ],
+            "properties": {
+              "school": {
+                "type": "string",
+                "examples": [
+                  "예시대학교"
+                ]
+              },
+              "dept": {
+                "type": "string",
+                "examples": [
+                  "컴퓨터공학과"
+                ]
+              },
+              "meta": {
+                "type": "string",
+                "examples": [
+                  "4.1 / 4.5   2023. 02.~ 2026. 02."
+                ]
+              }
+            }
+          }
+        },
+        "projectsNote": {
+          "type": "string",
+          "description": "Project 섹션 제목 오른쪽 별표 안내문. 생략하면 숨김.",
+          "examples": [
+            "프로젝트에 관한 자세한 설명은 포트폴리오에 작성돼 있습니다."
+          ]
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/projectItem"
+          },
+          "description": "이력서 Project 섹션(표지 프로젝트와 같은 형식, 2단계 불릿은 body 로)"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/skillGroup"
+          },
+          "description": "이력서 Skill 섹션"
+        },
+        "skillsNote": {
+          "type": "string",
+          "description": "Skill 제목 오른쪽 안내문. 생략하면 숨김."
+        }
+      }
+    },
+    "coverLetter": {
+      "type": "object",
+      "description": "Template/CoverLetter 한 장",
+      "required": [
+        "tagline",
+        "paragraphs"
+      ],
+      "properties": {
+        "tagline": {
+          "type": "string"
+        },
+        "photo": {
+          "type": "string",
+          "description": "증명사진 이미지 경로 또는 URL. Figma 에서 수동 교체"
+        },
+        "paragraphs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "items": {
+            "type": "object",
+            "required": [
+              "heading",
+              "body"
+            ],
+            "properties": {
+              "heading": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string",
+                "description": "**굵게** 허용"
+              }
+            }
+          }
+        }
+      }
+    },
+    "portfolio": {
+      "type": "object",
+      "description": "포트폴리오 = 표지 1장 + 회사별 상세 N장",
+      "required": [
+        "cover",
+        "details"
+      ],
+      "properties": {
+        "cover": {
+          "type": "object",
+          "required": [
+            "tagline",
+            "skills",
+            "projects"
+          ],
+          "properties": {
+            "tagline": {
+              "type": "string",
+              "examples": [
+                "“다양한 문제에 정면으로 부딪히며,\n해결책을 찾아내는 개발자 홍길동 입니다.”"
+              ]
+            },
+            "photo": {
+              "type": "string",
+              "description": "프로필 사진. Figma 에서 수동 교체"
+            },
+            "skills": {
+              "type": "array",
+              "maxItems": 4,
+              "items": {
+                "$ref": "#/$defs/skillGroup"
+              }
+            },
+            "projectsNote": {
+              "type": "string",
+              "default": "밑줄 쳐진 곳은 linking이 되어 있습니다."
+            },
+            "projects": {
+              "type": "array",
+              "maxItems": 7,
+              "items": {
+                "$ref": "#/$defs/projectItem"
+              }
+            }
+          }
+        },
+        "details": {
+          "type": "array",
+          "description": "회사(또는 조직) 하나당 한 묶음. 프로젝트가 많으면 Figma 에서 pages 를 나눈다.",
+          "items": {
+            "type": "object",
+            "required": [
+              "company",
+              "summary",
+              "projects"
+            ],
+            "properties": {
+              "company": {
+                "type": "string",
+                "examples": [
+                  "Example Corp"
+                ]
+              },
+              "companyUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "summary": {
+                "type": "object",
+                "required": [
+                  "headline",
+                  "sub"
+                ],
+                "properties": {
+                  "headline": {
+                    "type": "string"
+                  },
+                  "sub": {
+                    "type": "string",
+                    "description": "**굵게**, [링크](url) 허용"
+                  }
+                }
+              },
+              "projects": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "title",
+                    "period"
+                  ],
+                  "properties": {
+                    "title": {
+                      "type": "string",
+                      "examples": [
+                        "전사 Browser Harness"
+                      ]
+                    },
+                    "subtitle": {
+                      "type": "string",
+                      "description": "제목 옆 노란 한 줄"
+                    },
+                    "period": {
+                      "type": "string",
+                      "examples": [
+                        "2026.6 ~"
+                      ]
+                    },
+                    "links": {
+                      "type": "array",
+                      "maxItems": 3,
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "label",
+                          "url"
+                        ],
+                        "properties": {
+                          "label": {
+                            "type": "string"
+                          },
+                          "url": {
+                            "type": "string"
+                          },
+                          "icon": {
+                            "type": "string",
+                            "enum": [
+                              "github",
+                              "web",
+                              "youtube"
+                            ]
+                          }
+                        }
+                      },
+                      "description": "사이드바 링크(아이콘 19 + 밑줄 텍스트, 행 간격 12)"
+                    },
+                    "tags": {
+                      "type": "array",
+                      "maxItems": 8,
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "사용 기술 태그(최대 8, 2열 wrap)"
+                    },
+                    "sections": {
+                      "type": "array",
+                      "minItems": 1,
+                      "maxItems": 4,
+                      "items": {
+                        "type": "object",
+                        "required": [
+                          "heading",
+                          "body"
+                        ],
+                        "properties": {
+                          "heading": {
+                            "type": "string",
+                            "description": "기본은 배경 및 문제 / 핵심 아이디어 / 임팩트. 자유 문자열 허용(예: 구조, 사고 대응)"
+                          },
+                          "body": {
+                            "type": "string",
+                            "description": "불릿은 줄 앞에 '• ', **굵게** 허용"
+                          }
+                        }
+                      },
+                      "description": "(하위 호환) blocks 가 없을 때 section 블록으로 바꾼다."
+                    },
+                    "image": {
+                      "type": "string",
+                      "description": "(하위 호환) blocks 가 없을 때 sections 뒤에 image 블록으로 붙인다."
+                    },
+                    "blocks": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/detailBlock"
+                      },
+                      "description": "본문 블록(순서대로). 사이드바 옆에는 section 만 폭 720 으로, 그 아래와 image·images·code 는 폭 994. 페이지 나눔은 블록 단위."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "projectItem": {
+      "type": "object",
+      "required": [
+        "title",
+        "tools",
+        "period"
+      ],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "기술 이름 배열(최대 10개). 쉼표 없이 단어 사이 6px 로 표시. 문자열이면 쉼표로 나눔."
+        },
+        "period": {
+          "type": "string",
+          "examples": [
+            "2025.12.10. ~ 진행중"
+          ]
+        },
+        "bullets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "description": "**굵게** 허용"
+          }
+        },
+        "body": {
+          "type": "string",
+          "description": "bullets 대신 쓰는 본문 문자열. `• ` 1단계 불릿, `  • `(공백 2칸 이상) 2단계 불릿, 공백 2~3칸으로 시작하는 평문은 1단계 글 위치, 4칸 이상은 2단계 글 위치에 맞춘 이어지는 줄. body 가 있으면 bullets 보다 우선."
+        },
+        "links": {
+          "type": "array",
+          "maxItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "label",
+              "url"
+            ],
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "icon": {
+                "type": "string",
+                "enum": [
+                  "github",
+                  "youtube",
+                  "web"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "description": "프로젝트 항목(포폴 표지·이력서 Project 공용). 제목 | 세로 바 | 기술(쉼표 없이 단어 간격 6) | 회색선 | 기간, 아래 본문 + 오른쪽 링크(최대 2)."
+    },
+    "skillGroup": {
+      "type": "object",
+      "required": [
+        "category",
+        "tools",
+        "description"
+      ],
+      "properties": {
+        "category": {
+          "type": "string",
+          "examples": [
+            "AI Agent"
+          ]
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string",
+          "description": "**굵게** 허용, 우측 정렬"
+        }
+      },
+      "description": "스킬 그룹. 표지 Profile 에서는 설명이 도구 아래, 이력서 Skill 에서는 설명이 도구와 같은 줄(우측 정렬, 폭 638)."
+    },
+    "detailBlock": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "body"
+          ],
+          "properties": {
+            "type": {
+              "const": "section"
+            },
+            "heading": {
+              "type": "string",
+              "description": "소제목 16/22 Bold"
+            },
+            "body": {
+              "type": "string",
+              "description": "16/22 본문. `• ` 1단계(본문+10, 글은 +26), `  • ` 2단계(글은 +50), 공백 2~3칸 평문 = 1단계 글 위치의 이어지는 줄, 4칸 이상 = 2단계 글 위치, `## 텍스트` = 강조색 16 Bold 소제목."
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "src"
+          ],
+          "properties": {
+            "type": {
+              "const": "image"
+            },
+            "src": {
+              "type": "string",
+              "description": "http(s) URL, data URI, 또는 이미지 폴더 안 파일 이름. 콘텐츠 열(x 105~1135) 가운데 정렬"
+            },
+            "caption": {
+              "type": "string",
+              "description": "14/17 가운데, 이미지 아래 8"
+            },
+            "width": {
+              "type": "number",
+              "description": "폭(기본 994, 최대 994). 높이는 비율대로, 최대 420 → 넘으면 높이 420 에 폭 축소"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "items"
+          ],
+          "properties": {
+            "type": {
+              "const": "images"
+            },
+            "items": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "required": [
+                  "src"
+                ],
+                "properties": {
+                  "src": {
+                    "type": "string"
+                  },
+                  "caption": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "gap": {
+              "type": "number",
+              "default": 24,
+              "description": "이미지 사이 간격"
+            }
+          },
+          "additionalProperties": false,
+          "description": "가로 나란히, 같은 높이(최대 220), 폭은 비율대로, 전체 994 안에 맞게 축소"
+        },
+        {
+          "type": "object",
+          "required": [
+            "type",
+            "text"
+          ],
+          "properties": {
+            "type": {
+              "const": "code"
+            },
+            "text": {
+              "type": "string",
+              "description": "13/18 고정폭(Menlo → Roboto Mono → Source Code Pro), 배경 #f6f6f6, 패딩 12. 그대로 표시(마크업 해석 안 함)"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

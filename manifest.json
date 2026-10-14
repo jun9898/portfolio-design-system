@@ -1,0 +1,13 @@
+{
+  "name": "KB Resume System",
+  "id": "kb-resume-system-dev",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "networkAccess": {
+    "allowedDomains": ["*"],
+    "reasoning": "콘텐츠 JSON의 이미지 URL을 불러옵니다"
+  }
+}
