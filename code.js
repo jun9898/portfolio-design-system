@@ -154,14 +154,14 @@ const COMP_VERSIONS = {
   'Block/Resume/SkillGroup': 2,
   'Block/PageTitle': 3,
   'Block/Letter/Header': 2,
-  'Block/Cover/Header': 2,
+  'Block/Cover/Header': 3,
   'Block/Cover/SkillGroup': 3,
   'Block/Cover/ProjectItem': 3,
   'Block/Detail/Side': 4,
   'Block/Detail/Summary': 2,
   'Block/Detail/ProjectHead': 1,
   'Template/Resume': 8,
-  'Template/PortfolioCover': 6,
+  'Template/PortfolioCover': 7,
   'Template/PortfolioDetail': 4,
   'Template/CoverLetter': 3,
 };
@@ -1270,10 +1270,8 @@ const BLOCKS = {
     spacer(row);
     const table = put(row, al('HORIZONTAL', { name: 'contactTable', gap: 9, cross: 'MIN' }));
     const labels = put(table, al('VERTICAL', { name: 'labels', gap: 4, cross: 'MAX' }));
-    labels.layoutSizingHorizontal = 'FIXED';
-    labels.resize(52, Math.max(1, labels.height));
-    for (const l of ['E-mail', 'Github', 'Blog']) {
-      await text({ name: 'label', style: 'KB/Label', chars: l, align: 'RIGHT', parent: labels, size: 'FILL', width: 52 });
+    for (const l of ['email', 'github', 'blog']) {
+      await text({ name: 'label', style: 'KB/Label', chars: l, align: 'RIGHT', parent: labels });
     }
     const vline = figma.createRectangle();
     vline.name = 'vline';
