@@ -96,6 +96,14 @@
           "examples": [
             "#101010"
           ]
+        },
+        "preset": {
+          "type": "string",
+          "enum": [
+            "default",
+            "krafton"
+          ],
+          "description": "브랜드 프리셋. default = #f9af00, krafton = #02b86f(크래프톤 정글 포인트 그린). accent/ink 를 같이 적으면 그 값이 우선"
         }
       },
       "additionalProperties": false

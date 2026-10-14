@@ -55,6 +55,12 @@
   </label>
   <div id="imgInfo">선택한 이미지 없음. URL·data URI 이미지는 폴더 없이도 들어갑니다.</div>
   <div class="row">
+    <label for="preset">브랜드</label>
+    <select id="preset">
+      <option value="">직접 지정</option>
+      <option value="default">기본 (#f9af00)</option>
+      <option value="krafton">KRAFTON (#02b86f)</option>
+    </select>
     <label for="accent">강조색</label>
     <input id="accent" type="color" value="#f9af00">
     <span id="accentHint" style="color:var(--muted);font-size:11px">JSON 에 theme.accent 가 있으면 그 값이 우선</span>
@@ -95,6 +101,7 @@
   try { const saved = localStorage.getItem('kb-json'); if (saved) $('json').value = saved; } catch (e) {}
   try { const fam = localStorage.getItem('kb-family'); if (fam) $('family').value = fam; } catch (e) {}
   try { const ac = localStorage.getItem('kb-accent'); if (ac) $('accent').value = ac; } catch (e) {}
+  $('preset').addEventListener('change', () => { const v = { default: '#f9af00', krafton: '#02b86f' }[$('preset').value]; if (v) $('accent').value = v; });
   $('accent').addEventListener('change', () => { try { localStorage.setItem('kb-accent', $('accent').value); } catch (e) {} });
 
   function log(level, msg) {
@@ -225,6 +232,7 @@
       msg.json = text;
       msg.images = collectImages(json);
       msg.accent = $('accent').value;
+      msg.preset = $('preset').value;
       if (step === 'fillTemplate') {
         msg.which = $('which').value;
         msg.index = parseInt($('index').value, 10) || 0;

@@ -355,7 +355,7 @@ let current='resume', renderTok=0, lastFaces=-1;
 const stage=document.getElementById('stage'), ta=document.getElementById('json'), st=document.getElementById('status'), ovf=document.getElementById('ovf');
 async function render(){
   let d; try{ d=JSON.parse(ta.value); st.textContent='JSON 정상'; st.className='status'; }catch(e){ st.textContent='JSON 오류: '+e.message; st.className='status err'; return; }
-  const th=d.theme||{}; document.documentElement.style.setProperty('--kb-accent', /^#[0-9a-f]{6}$/i.test(th.accent||'')?th.accent:'#f9af00'); document.documentElement.style.setProperty('--kb-ink', /^#[0-9a-f]{6}$/i.test(th.ink||'')?th.ink:'#101010');
+  const PRESETS={default:{accent:'#f9af00',ink:'#101010'},krafton:{accent:'#02b86f',ink:'#101010'}}; const th=Object.assign({}, PRESETS[(d.theme&&d.theme.preset||'').toLowerCase()]||{}, d.theme||{}); document.documentElement.style.setProperty('--kb-accent', /^#[0-9a-f]{6}$/i.test(th.accent||'')?th.accent:'#f9af00'); document.documentElement.style.setProperty('--kb-ink', /^#[0-9a-f]{6}$/i.test(th.ink||'')?th.ink:'#101010');
   const tok=++renderTok; try{ await preload(d); }catch(e){} if(tok!==renderTok) return;
   stage.style.transform='none'; stage.innerHTML=''; pageN=0;
   let res; try{ const doc=R[current](d); res = doc.abs ? doc.run() : paginate(doc); }catch(e){ st.textContent='렌더 오류: '+e.message; st.className='status err'; return; }

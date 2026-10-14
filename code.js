@@ -2739,13 +2739,23 @@ function normHex(v) {
   return '#' + h;
 }
 
-function themeFrom(json, uiAccent) {
-  const t = json && json.theme && typeof json.theme === 'object' ? json.theme : {};
+// Brand presets. KRAFTON: point green #02b86f used on jungle.krafton.com.
+const THEME_PRESETS = {
+  default: { accent: '#f9af00', ink: '#101010' },
+  krafton: { accent: '#02b86f', ink: '#101010' },
+};
+
+function themeFrom(json, uiAccent, uiPreset) {
+  const raw = json && json.theme && typeof json.theme === 'object' ? json.theme : {};
+  const presetName = str(raw.preset || uiPreset || '').toLowerCase();
+  const preset = THEME_PRESETS[presetName] || null;
+  if (presetName && !preset) warn(`theme.preset "${presetName}" 는 없는 프리셋입니다. 사용 가능: ${Object.keys(THEME_PRESETS).join(', ')}`);
+  const t = Object.assign({}, preset || {}, raw);
   const out = {};
   for (const k of Object.keys(THEME_VARS)) {
     if (t[k] == null || t[k] === '') continue;
     const h = normHex(t[k]);
-    if (h) out[k] = { hex: h, from: 'JSON theme.' + k };
+    if (h) out[k] = { hex: h, from: raw[k] != null && raw[k] !== '' ? 'JSON theme.' + k : '프리셋 ' + presetName };
     else warn(`theme.${k} "${t[k]}" 는 #rrggbb 형식이 아니라 무시합니다.`);
   }
   if (!out.accent && uiAccent) {
@@ -2856,7 +2866,7 @@ function parseJson(jsonText) {
   }
 }
 
-async function buildAll(jsonText, images, uiAccent) {
+async function buildAll(jsonText, images, uiAccent, uiPreset) {
   const json = parseJson(jsonText);
   const p = validateProfile(json);
   const plan = [];
@@ -2869,10 +2879,10 @@ async function buildAll(jsonText, images, uiAccent) {
   });
   if (!plan.length) throw new Error('JSON 에 resume / coverLetter / portfolio.cover / portfolio.details 가 하나도 없습니다.');
   info(`만들 순서: ${plan.map((j) => j.label).join(' → ')}`);
-  await runPlan(plan, p, images, themeFrom(json, uiAccent));
+  await runPlan(plan, p, images, themeFrom(json, uiAccent, uiPreset));
 }
 
-async function fillTemplate(jsonText, which, index, images, uiAccent) {
+async function fillTemplate(jsonText, which, index, images, uiAccent, uiPreset) {
   if (!TEMPLATES[which]) throw new Error(`알 수 없는 템플릿 종류: ${which}`);
   const json = parseJson(jsonText);
   const p = validateProfile(json);
@@ -2886,7 +2896,7 @@ async function fillTemplate(jsonText, which, index, images, uiAccent) {
     if (!details[idx]) throw new Error(`portfolio.details[${idx}] 가 없습니다 (총 ${details.length}개).`);
     job = { kind: which, data: details[idx], label: 'portfolioDetail-' + idx };
   }
-  await runPlan([job], p, images, themeFrom(json, uiAccent));
+  await runPlan([job], p, images, themeFrom(json, uiAccent, uiPreset));
 }
 
 // =====================================================================
@@ -2940,11 +2950,11 @@ figma.ui.onmessage = async (msg) => {
         await runStep('4 buildTemplates', family, buildTemplates);
         break;
       case 'buildAll':
-        await runStep('5 buildAll', family, () => buildAll(msg.json, msg.images, msg.accent));
+        await runStep('5 buildAll', family, () => buildAll(msg.json, msg.images, msg.accent, msg.preset));
         break;
       case 'fillTemplate':
         await runStep(`5 fillTemplate(${msg.which}${msg.which === 'portfolioDetail' ? '[' + msg.index + ']' : ''})`, family,
-          () => fillTemplate(msg.json, msg.which, msg.index, msg.images, msg.accent));
+          () => fillTemplate(msg.json, msg.which, msg.index, msg.images, msg.accent, msg.preset));
         break;
       case 'freezeSelectionColors':
         await runStep('색 고정(선택)', family, freezeSelectionColors);
