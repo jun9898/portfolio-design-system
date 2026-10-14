@@ -101,6 +101,7 @@ const TEMPLATES = {
 };
 const TEMPLATE_ORDER = ['resume', 'portfolioCover', 'portfolioDetail', 'coverLetter'];
 
+const COVER_PROFILE = { inset: 38, photoW: 374, photoH: 499, gap: 32, skillsTop: 10 };
 const PAGE_TOP = { resume: 37, coverLetter: 55, portfolioDetail: 66, portfolioCover: 74 };
 const PAGE_BOTTOM = 30;
 const FILLED_STEP = PAGE_W + FILLED_GAP;
@@ -160,7 +161,7 @@ const COMP_VERSIONS = {
   'Block/Detail/Summary': 2,
   'Block/Detail/ProjectHead': 1,
   'Template/Resume': 8,
-  'Template/PortfolioCover': 4,
+  'Template/PortfolioCover': 5,
   'Template/PortfolioDetail': 4,
   'Template/CoverLetter': 3,
 };
@@ -1554,13 +1555,13 @@ const TEMPLATE_BUILDERS = {
     const profile = sectionFrame(c, 'profile', 36);
     await pageTitle(profile, 'Profile', { rightText: '“다양한 문제에 정면으로 부딪히며,\n해결책을 찾아내는 개발자 홍길동 입니다.”' });
     const plist = listFrame(profile, 0);
-    const row = put(plist, al('HORIZONTAL', { name: 'item', gap: 30, cross: 'MIN' }), { w: 'FILL' });
+    const row = put(plist, al('HORIZONTAL', { name: 'item', gap: COVER_PROFILE.gap, pl: COVER_PROFILE.inset, cross: 'MIN' }), { w: 'FILL' });
     const photo = figma.createRectangle();
     photo.name = 'photo';
-    photo.resize(410, 374);
+    photo.resize(COVER_PROFILE.photoW, COVER_PROFILE.photoH);
     solidFill(photo, '#d9d9d9');
     row.appendChild(photo);
-    const skills = put(row, al('VERTICAL', { name: 'skills', gap: 9 }), { w: 'FILL' });
+    const skills = put(row, al('VERTICAL', { name: 'skills', gap: 9, pt: COVER_PROFILE.skillsTop }), { w: 'FILL' });
     addItems(skills, 'Block/Cover/SkillGroup', 4, 'skill');
 
     const projects = sectionFrame(c, 'projects', 36);
