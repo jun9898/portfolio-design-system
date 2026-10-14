@@ -4,3 +4,4 @@ node_modules/
 *.jpg
 *.jpeg
 !docs/screenshots/*.png
+!docs/icons/*.png

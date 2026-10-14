@@ -1734,6 +1734,20 @@ async function resolveImage(ctx, value, label) {
   return hash;
 }
 
+let RUN_CTX = null;
+const LINK_ICON_FILES = { github: 'icon-github.png', youtube: 'icon-youtube.png', web: 'icon-web.png' };
+
+// Paint a link icon slot from icon-<type>.png when that file was provided; otherwise keep the placeholder circle.
+async function paintLinkIcon(node, link) {
+  if (!node || !link || !RUN_CTX) return;
+  const kind = String(link.icon || 'web').toLowerCase();
+  const file = LINK_ICON_FILES[kind] || ('icon-' + kind + '.png');
+  if (!RUN_CTX.images[file]) return;
+  const hash = await resolveImage(RUN_CTX, file, '링크 아이콘');
+  if (!hash) return;
+  node.fills = [{ type: 'IMAGE', scaleMode: 'FIT', imageHash: hash }];
+}
+
 function paintImage(node, hash) {
   node.fills = [{ type: 'IMAGE', scaleMode: 'FILL', imageHash: hash }];
 }
@@ -1871,9 +1885,11 @@ async function fillProjectItem(it, pr) {
   if (l1) {
     l1.visible = links.length > 0;
     if (links[0]) await fillText(l1, 'label', str(links[0].label), { rich: false, link: links[0].url });
+    if (links[0]) await paintLinkIcon(findNode(l1, 'icon'), links[0]);
   }
   setBoolProp(it, 'showLink2', links.length > 1);
   if (l2 && links[1]) await fillText(l2, 'label', str(links[1].label), { rich: false, link: links[1].url });
+  if (l2 && links[1]) await paintLinkIcon(findNode(l2, 'icon'), links[1]);
   return fillRichSlot(it, 'bullets', projectBody(pr), PROJECT_RICH);
 }
 
@@ -2465,6 +2481,7 @@ async function fillSide(side, pr) {
     const l = links[i - 1];
     row.visible = !!l;
     if (l) await fillText(side, 'linkLabel' + i, str(l.label), { rich: false, link: l.url });
+    if (l) await paintLinkIcon(findNode(row, 'linkIcon' + i), l);
   }
   const lw = findNode(side, 'linksWrap');
   if (lw) lw.visible = links.length > 0;
@@ -2665,7 +2682,7 @@ async function runPlan(plan, p, images, theme) {
     }
   }
 
-  const ctx = {
+  const ctx = RUN_CTX = {
     page: tplPage,
     images: images && typeof images === 'object' ? images : {},
     imageCache: new Map(),

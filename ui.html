@@ -175,6 +175,7 @@
     const out = [];
     const push = (v) => { if (typeof v === 'string' && v.trim()) out.push(v.trim()); };
     if (json.resume) push(json.resume.logo);
+    ['icon-github.png', 'icon-youtube.png', 'icon-web.png'].forEach((f) => { if (files.has(f)) out.push(f); });
     if (json.coverLetter) push(json.coverLetter.photo);
     const pf = json.portfolio || {};
     if (pf.cover) push(pf.cover.photo);
