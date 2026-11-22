@@ -1661,11 +1661,32 @@ function bulletText(bullets) {
   }).join('\n');
 }
 
+// profile.blog is optional: missing, or both label and url empty → no blog.
+function hasBlog(p) {
+  const b = p && p.blog;
+  return !!b && (str(b.label).trim() !== '' || str(b.url).trim() !== '');
+}
+
+function blogLabel(p) {
+  return str(p.blog.label).trim() ? str(p.blog.label) : str(p.blog.url).trim();
+}
+
+// Show/hide one contact slot together with the separator right before it.
+function setContactSlotVisible(node, on) {
+  if (!node) return;
+  node.visible = on;
+  const sibs = node.parent ? node.parent.children : [];
+  const prev = sibs[sibs.indexOf(node) - 1];
+  if (prev && prev.name === 'sep') prev.visible = on;
+}
+
 async function fillContact(contact, p) {
   await fillText(contact, 'email', p.email, { rich: false });
   await fillText(contact, 'phone', p.phone, { rich: false });
   await fillText(contact, 'github', p.github.label, { rich: false, link: p.github.url });
-  await fillText(contact, 'blog', p.blog.label, { rich: false, link: p.blog.url });
+  const on = hasBlog(p);
+  if (on) await fillText(contact, 'blog', blogLabel(p), { rich: false, link: p.blog.url });
+  setContactSlotVisible(textNodeFor(contact, 'blog'), on);
 }
 
 function validateProfile(json) {
@@ -1673,8 +1694,7 @@ function validateProfile(json) {
   for (const k of ['name', 'email', 'phone']) req(json, 'profile.' + k);
   req(json, 'profile.github.label');
   req(json, 'profile.github.url');
-  req(json, 'profile.blog.label');
-  req(json, 'profile.blog.url');
+  if (p.blog != null && typeof p.blog !== 'object') throw new Error('JSON "profile.blog" 는 { label, url } 객체여야 합니다. 블로그가 없으면 키를 지우세요.');
   return p;
 }
 
@@ -1920,7 +1940,8 @@ function noteHead(text) {
 }
 
 function sectionNote(d, key) {
-  if (key === 'about') return str(d.note).trim() || DEFAULT_NOTE;
+  // about: 생략·빈 문자열이면 기본 문구, false 면 안내문 없음(noteHead 가 showRight 를 끈다).
+  if (key === 'about') return d.note === false ? '' : str(d.note).trim() || DEFAULT_NOTE;
   return str(d[RESUME_NOTE_KEY[key]]);
 }
 
@@ -2082,7 +2103,17 @@ const KINDS = {
       await fillText(header, 'name', p.name, { rich: false });
       await fillText(header, 'email', p.email, { rich: false });
       await fillText(header, 'github', p.github.label, { rich: false, link: p.github.url });
-      await fillText(header, 'blog', p.blog.label, { rich: false, link: p.blog.url });
+      // 블로그가 없으면 표의 라벨 줄(세 번째 "blog")과 값 줄을 함께 숨긴다. 세로선은 FILL 이라 따라 줄어든다.
+      const on = hasBlog(p);
+      if (on) await fillText(header, 'blog', blogLabel(p), { rich: false, link: p.blog.url });
+      const blogVal = textNodeFor(header, 'blog');
+      if (blogVal) blogVal.visible = on;
+      const labels = findNode(header, 'labels');
+      if (labels) {
+        const rows = labels.children.filter((n) => n.type === 'TEXT');
+        const blogLbl = rows.find((n) => n.characters === 'blog') || rows[2];
+        if (blogLbl) blogLbl.visible = on;
+      }
     },
     sections: (d) => [
       {

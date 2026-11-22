@@ -170,7 +170,10 @@ const srcOf = v => !v ? null : isImg(v) ? v : (/\.(png|jpe?g|gif|webp|svg)$/i.te
 const link = (label, url) => url ? `<a href="${esc(url)}" target="_blank" rel="noopener">${esc(label)}</a>` : esc(label);
 const DEFAULT_NOTE='밑줄 쳐진 곳은 linking이 되어 있습니다.';
 const note = t => `<div class="note"><span class="t-star">*</span><span class="t-caption">${esc(t)}</span></div>`;
-const contact = p => `<div class="contact t-caption"><span>${esc(p.email)}</span><i class="sep"></i><span>${esc(p.phone)}</span><i class="sep"></i>${link('github',p.github.url)}<i class="sep"></i>${link('blog',p.blog.url)}</div>`;
+// profile.blog 는 선택값: 키가 없거나 label·url 이 둘 다 비면 블로그 칸(과 앞 구분선)을 숨긴다.
+const hasBlog = p => !!p.blog && (String(p.blog.label ?? '').trim() !== '' || String(p.blog.url ?? '').trim() !== '');
+const blogLabel = p => String(p.blog.label ?? '').trim() ? String(p.blog.label) : String(p.blog.url ?? '').trim();
+const contact = p => `<div class="contact t-caption"><span>${esc(p.email)}</span><i class="sep"></i><span>${esc(p.phone)}</span><i class="sep"></i>${link('github',p.github.url)}${hasBlog(p)?`<i class="sep"></i>${link('blog',p.blog.url)}`:''}</div>`;
 const ICON={
   github:'<svg class="ico" viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>',
   youtube:'<svg class="ico" viewBox="0 0 16 16"><path d="M15.67 4.15a2 2 0 00-1.41-1.42C13.02 2.4 8 2.4 8 2.4s-5.02 0-6.26.33A2 2 0 00.33 4.15 21 21 0 000 8a21 21 0 00.33 3.85 2 2 0 001.41 1.42c1.24.33 6.26.33 6.26.33s5.02 0 6.26-.33a2 2 0 001.41-1.42A21 21 0 0016 8a21 21 0 00-.33-3.85zM6.4 10.4V5.6L10.56 8z"/></svg>',
@@ -187,7 +190,7 @@ function coverLetter(d){
 }
 function cover(d){
   const c=d.portfolio.cover, p=d.profile;
-  return { header:`<div class="cover-head"><h1 class="t-name-cover">${esc(p.name)}</h1><div class="row"><span class="t-portfolio">Portfolio</span><div class="ctable t-label"><div class="labels"><span>email</span><span>github</span><span>blog</span></div><i class="vline"></i><div class="vals"><span>${esc(p.email)}</span><span>${link(p.github.label,p.github.url)}</span><span>${link(p.blog.label,p.blog.url)}</span></div></div></div><div class="rule-thin"></div></div>`,
+  return { header:`<div class="cover-head"><h1 class="t-name-cover">${esc(p.name)}</h1><div class="row"><span class="t-portfolio">Portfolio</span><div class="ctable t-label"><div class="labels"><span>email</span><span>github</span>${hasBlog(p)?'<span>blog</span>':''}</div><i class="vline"></i><div class="vals"><span>${esc(p.email)}</span><span>${link(p.github.label,p.github.url)}</span>${hasBlog(p)?`<span>${link(blogLabel(p),p.blog.url)}</span>`:''}</div></div></div><div class="rule-thin"></div></div>`,
     sections:[
       {head:pageTitle('Profile','', `<p class="t-tagline" style="text-align:right">${rich(c.tagline)}</p>`), secGap:'36px', items:[`<div style="display:flex;gap:32px;padding-left:32px;align-items:flex-start">${isImg(c.photo)?`<img class="photo-img" src="${esc(c.photo)}" alt="">`:'<div class="ph photo-ph">사진 374×499</div>'}<div style="display:flex;flex-direction:column;gap:9px;flex:1;min-width:0;padding-top:10px">${c.skills.map(s=>`<div class="skill"><div><div class="row"><p class="t-item-s">${esc(s.category)}</p><i class="rule-thin"></i></div><p class="t-caption">${esc(s.tools.join(', '))}</p></div><p class="t-body-dense">${rich(s.description)}</p></div>`).join('')}</div></div>`]},
       {head:pageTitle('Project','',note(c.projectsNote||DEFAULT_NOTE)), cont:pageTitle('Project'), secGap:'36px', gap:'var(--kb-item-list)', pl:35, items:c.projects.map(j=>`<div class="proj"><div class="row"><span class="t-item-s">${link(j.title,j.url)}</span><i class="vbar"></i>${toolsHtml(j.tools)}<i class="rule-soft"></i><span class="t-caption">${esc(j.period)}</span></div><div class="body"><ul class="t-body-bullet">${(j.bullets||[]).map(b=>`<li>${rich(b)}</li>`).join('')}</ul><div class="links">${(j.links||[]).map(chip).join('')}</div></div></div>`)}
@@ -257,7 +260,7 @@ function layResume(d){
   let y=233;
   for(const key of order){
     const S=RS[key]; if(!S) continue; const items=S.items(r); if(!items.length) continue;
-    const nt = key==='about' ? (r.note||DEFAULT_NOTE) : r[S.noteKey];
+    const nt = key==='about' ? (r.note===false ? '' : (r.note||DEFAULT_NOTE)) : r[S.noteKey];
     // 섹션 제목 (52,T) 32/38 · 밑줄 2px (52,T+38)→1133 · 우측 슬롯 Note: 캡션 글자 위치를 원본에 맞춰 T-10
     const head=(T,withNote)=>{ const a=[put(pg,`<h2 class="t-section" style="white-space:nowrap">${esc(S.title)}</h2>`,52,T), put(pg,'<div class="r-rule"></div>',52,T+38,1081)]; if(withNote&&nt) a.push(putR(pg,note(nt),1190-1133,T-10)); return a; };
     let hs=head(y,true), cy=y+38+S.g, placed=0;

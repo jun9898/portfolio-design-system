@@ -143,10 +143,11 @@ JSON 최상위에 `theme` 을 넣으면 Build all·Fill 을 시작할 때 `KB To
 **이력서.**
 
 - 헤더: 이름 (55,37) 71/83, 태그라인 y=127 22/26 강조색. 연락처(`Atom/Contact`)는 페이지 절대 위치로 오른쪽 끝 1133, y=214 에 고정합니다.
+- `profile.blog` 는 선택입니다. 없거나 `label`·`url` 이 둘 다 비면 연락처의 blog 칸과 바로 앞 구분선을 숨기고, 줄어든 폭으로 오른쪽 끝 1133 을 다시 맞춥니다. 자기소개서 연락처도 같고, 포트폴리오 표지 연락처 표는 blog 라벨 줄과 값 줄을 함께 숨깁니다.
 - 섹션은 `resume.sections` 순서로 쌓습니다(`education`, `about`, `experience`, `project`, `skill`). 생략하면 SPEC2 기본 순서인 education → about → experience → project → skill 입니다. 데이터가 없는 섹션은 건너뜁니다. A형처럼 쓰려면 `"sections": ["about","experience","education"]` 를 넣으세요.
 - 섹션 제목(32/38)과 밑줄(2px)은 x 52 → 1133 입니다(이력서 페이지 좌우 여백 52·57). 첫 섹션 제목 y=233, 이어지는 장은 44, 섹션 사이 36(마지막 항목 바닥 → 다음 제목).
 - 밑줄 위쪽 → 첫 항목 위쪽 간격은 education 20, about 27, experience 36, project 39, skill 36 입니다(제목 top + 38 + 간격).
-- 섹션 안내문은 제목 오른쪽(오른쪽 끝 1133)에 별표 안내로 붙습니다. 상자 위쪽은 제목 top −10 이고 밑줄 14 위에서 끝납니다. 값은 섹션마다 `resume.educationNote`, `resume.note`(About Me, 생략 시 기본 문구), `resume.experienceNote`, `resume.projectsNote`, `resume.skillsNote` 이며, About Me 외에는 없으면 숨깁니다. 이어지는 장의 제목에는 붙지 않습니다.
+- 섹션 안내문은 제목 오른쪽(오른쪽 끝 1133)에 별표 안내로 붙습니다. 상자 위쪽은 제목 top −10 이고 밑줄 14 위에서 끝납니다. 값은 섹션마다 `resume.educationNote`, `resume.note`(About Me, 생략 시 기본 문구, `false` 면 숨김), `resume.experienceNote`, `resume.projectsNote`, `resume.skillsNote` 이며, About Me 외에는 없으면 숨깁니다. 이어지는 장의 제목에는 붙지 않습니다.
 - education(x 55, 폭 1078): 줄 높이 24. 학교 20 Bold, 학교 오른쪽 9·위 12 에 회색 가로선 29×1, 그 오른쪽 9 에 학과 20 Light(학교보다 3 위), 학과 오른쪽 17·위 5 에 메타 16. 항목 간격 24.
 - about(x 55, 폭 1078): 소제목 x 57(16/25 Bold), 본문 x 67 폭 1066(16/28). 단락 간격 9.
 - experience(x 55, 폭 1078): 기존과 같습니다(항목 간격 24).

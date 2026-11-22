@@ -15,8 +15,7 @@
         "name",
         "email",
         "phone",
-        "github",
-        "blog"
+        "github"
       ],
       "properties": {
         "name": {
@@ -58,10 +57,7 @@
         },
         "blog": {
           "type": "object",
-          "required": [
-            "label",
-            "url"
-          ],
+          "description": "선택. 비우면 연락처에서 숨김",
           "properties": {
             "label": {
               "type": "string",
@@ -146,8 +142,11 @@
           ]
         },
         "note": {
-          "type": "string",
-          "description": "About Me 제목 오른쪽 별표 안내문. 생략하거나 비우면 기본 문구.",
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "description": "About Me 제목 오른쪽 별표 안내문. 생략하거나 비우면 기본 문구, false면 숨김.",
           "default": "밑줄 쳐진 곳은 linking이 되어 있습니다."
         },
         "educationNote": {
